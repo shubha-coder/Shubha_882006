@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 02: React Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+
+        .app {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .nav-buttons {
+            background: white;
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            background: #e8e8e8;
+            color: #495057;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #d0d0d0;
+        }
+
+        .nav-btn.active {
+            background: #0066cc;
+            color: white;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 250px;
+        }
+
+        .page h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .page p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .lab-task {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 0 20px 20px 20px;
+        }
+
+        .lab-task p {
+            color: #856404;
+            font-size: 14px;
+        }
+
+        .concept-recap {
+            background: #e8f0fe;
+            padding: 16px 20px;
+            margin: 0 20px 20px 20px;
+            border-radius: 6px;
+        }
+
+        .concept-recap h3 {
+            color: #1a73e8;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .concept-recap ul {
+            margin-left: 20px;
+        }
+
+        .concept-recap li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #1a73e8;
+        }
+
+        .url-display {
+            margin-top: 20px;
+            padding: 12px 0;
+            font-size: 13px;
+            color: #666;
+            border-top: 1px solid #f0f0f0;
+            font-family: monospace;
+        }
+
+        .url-path {
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script>
+        // Simple navigation without React Router
+        let currentPage = 'home';
+
+        function navigate(page) {
+            currentPage = page;
+            
+            // Update URL without refresh
+            const newUrl = window.location.origin + window.location.pathname + (page === 'home' ? '' : `?page=${page}`);
+            window.history.pushState({ page }, '', newUrl);
+            
+            // Update UI
+            renderContent();
+            updateActiveButton();
+        }
+
+        function renderContent() {
+            const contentDiv = document.getElementById('content');
+            const urlDisplay = document.getElementById('urlDisplay');
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page') || 'home';
+            currentPage = page;
+            
+            let html = '';
+            if (page === 'home') {
+                html = `
+                    <div class="page">
+                        <h2>🏠 Home Page</h2>
+                        <p>Welcome to the Home page!</p>
+                        <p>This is the main content area.</p>
+                    </div>
+                `;
+            } else if (page === 'about') {
+                html = `
+                    <div class="page">
+                        <h2>📖 About Page</h2>
+                        <p>This is the About page content.</p>
+                        <p>Learn more about us here.</p>
+                    </div>
+                `;
+            } else if (page === 'contact') {
+                html = `
+                    <div class="page">
+                        <h2>📞 Contact Page</h2>
+                        <p>Get in touch with us!</p>
+                        <p>Email: contact@example.com</p>
+                    </div>
+                `;
+            }
+            
+            contentDiv.innerHTML = html;
+            urlDisplay.innerHTML = `
+                <strong>Current URL:</strong> ${window.location.origin}
+                <span class="url-path">${page === 'home' ? '/' : `/${page}`}</span>
+            `;
+        }
+
+        function updateActiveButton() {
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page') || 'home';
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-page') === page) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', () => {
+            renderContent();
+            updateActiveButton();
+        });
+
+        // Initial render
+        window.onload = () => {
+            renderContent();
+            updateActiveButton();
+        };
+    </script>
+
+    <div class="app">
+        <div class="nav-buttons">
+            <button class="nav-btn" data-page="home" onclick="navigate('home')">Home</button>
+            <button class="nav-btn" data-page="about" onclick="navigate('about')">About</button>
+            <button class="nav-btn" data-page="contact" onclick="navigate('contact')">Contact</button>
+        </div>
+
+        <div class="content" id="content"></div>
+        <div class="url-display" id="urlDisplay"></div>
+
+        <div class="lab-task">
+            <p><strong>Lab Task:</strong> Click the buttons above. Notice how the URL changes without the page refreshing.</p>
+        </div>
+
+        <div class="concept-recap">
+            <h3>Quick Concept Recap:</h3>
+            <ul>
+                <li><strong>BrowserRouter:</strong> Keeps your UI in sync with the URL.</li>
+                <li><strong>Routes & Route:</strong> Map a specific path (like /about) to a component.</li>
+                <li><strong>Link:</strong> Used instead of &lt;a&gt; tags to prevent full page reloads.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
