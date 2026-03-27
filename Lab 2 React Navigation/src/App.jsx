@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import './App.css';
 
 // Home Component
@@ -6,8 +6,8 @@ function Home() {
   return (
     <div className="page">
       <h2>Home Page</h2>
-      <p>Welcome to the Home page content.</p>
-      <p>This is where the main information would go.</p>
+      <p>Welcome to the Home page!</p>
+      <p>This is the main content area.</p>
     </div>
   );
 }
@@ -17,8 +17,8 @@ function About() {
   return (
     <div className="page">
       <h2>About Page</h2>
-      <p>Information about this application.</p>
-      <p>This demonstrates React Router navigation.</p>
+      <p>This is the About page content.</p>
+      <p>Learn more about us here.</p>
     </div>
   );
 }
@@ -28,20 +28,8 @@ function Contact() {
   return (
     <div className="page">
       <h2>Contact Page</h2>
-      <p>Contact us at: example@email.com</p>
-      <p>Phone: (555) 123-4567</p>
-    </div>
-  );
-}
-
-// Component to show current URL
-function URLDisplay() {
-  const location = useLocation();
-  const currentPath = location.pathname === '/' ? '/' : location.pathname;
-  
-  return (
-    <div className="url-display">
-      Current URL: <span className="url-path">{window.location.origin}{currentPath}</span>
+      <p>Get in touch with us!</p>
+      <p>Email: contact@example.com</p>
     </div>
   );
 }
@@ -50,12 +38,12 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app">
-        {/* Navigation Buttons - Using NavLink for active styling */}
-        <div className="nav-container">
+        {/* Navigation Buttons */}
+        <div className="nav-buttons">
           <NavLink 
             to="/" 
             className={({ isActive }) => 
-              isActive ? "nav-link active" : "nav-link"
+              isActive ? "nav-btn active" : "nav-btn"
             }
             end
           >
@@ -64,7 +52,7 @@ function App() {
           <NavLink 
             to="/about" 
             className={({ isActive }) => 
-              isActive ? "nav-link active" : "nav-link"
+              isActive ? "nav-btn active" : "nav-btn"
             }
           >
             About
@@ -72,7 +60,7 @@ function App() {
           <NavLink 
             to="/contact" 
             className={({ isActive }) => 
-              isActive ? "nav-link active" : "nav-link"
+              isActive ? "nav-btn active" : "nav-btn"
             }
           >
             Contact
@@ -80,22 +68,21 @@ function App() {
         </div>
 
         {/* Content Area */}
-        <div className="content-container">
+        <div className="content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
-          <URLDisplay />
         </div>
 
-        {/* Lab Task Box */}
-        <div className="lab-task-box">
+        {/* Lab Task Description */}
+        <div className="lab-task">
           <p><strong>Lab Task:</strong> Click the buttons above. Notice how the URL changes without the page refreshing.</p>
         </div>
 
-        {/* Concept Recap Box */}
-        <div className="concept-box">
+        {/* Quick Concept Recap */}
+        <div className="concept-recap">
           <h3>Quick Concept Recap:</h3>
           <ul>
             <li><strong>BrowserRouter:</strong> Keeps your UI in sync with the URL.</li>
